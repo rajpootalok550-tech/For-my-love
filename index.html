@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>For My Senorita ❤️</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      color: white;
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    video {
+      width: 100%;
+      height: 100vh;
+      object-fit: cover;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      filter: brightness(70%);
+    }
+
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .text {
+      font-size: 1.6rem;
+      opacity: 0;
+      animation: fadeIn 3s forwards;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hint {
+      position: absolute;
+      bottom: 20px;
+      font-size: 0.9rem;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- VIDEO -->
+  <video id="bgVideo" loop playsinline>
+    <source src="love.mp4" type="video/mp4">
+  </video>
+
+  <!-- MUSIC -->
+  <audio id="bgMusic" loop>
+    <source src="music.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- TEXT -->
+  <div class="overlay">
+    <div id="message" class="text">
+      Still you. ❤️
+    </div>
+    <div class="hint">Tap anywhere 💕</div>
+  </div>
+
+  <script>
+    const video = document.getElementById("bgVideo");
+    const music = document.getElementById("bgMusic");
+    const message = document.getElementById("message");
+
+    const messages = [
+  "Dear Anshika ❤️",
+  "Ye saal mere liye perfect nahi tha…",
+  "Hum har baar ladte rahe 😔",
+  "Aur sach ye hai ki maine tumhe hurt kiya…",
+  "Uske liye mujhe dil se afsos hai 💔",
+  "Par ek baat kabhi jhooth nahi thi…",
+  "Main tumse bahut pyaar karta hoon 🫶",
+  "Tum meri galtiyon se zyada meri mohabbat ho",
+  "Main perfect nahi hoon…",
+  "Par tumhare liye better banna chahta hoon 🤍",
+  "Is naye saal mein…",
+  "Main fights kam, pyaar zyada chahta hoon ✨",
+  "Main tumhari hasi ka reason banna chahta hoon",
+  "Anshika, tum meri sabse khoobsurat aadat ho 💖",
+  "Happy New Year, meri jaan 🎆",
+  "Iss saal bhi… aur har saal bhi…",
+  "Sirf tum ❤️"
+];
+
+    let index = 0;
+
+    function startExperience() {
+      video.play();
+      music.play();
+
+      setInterval(() => {
+        message.style.opacity = 0;
+        setTimeout(() => {
+          index = (index + 1) % messages.length;
+          message.innerHTML = messages[index];
+          message.style.animation = "none";
+          message.offsetHeight; // reset animation
+          message.style.animation = "fadeIn 2.5s forwards";
+        }, 800);
+      }, 4000);
+    }
+
+    document.body.addEventListener("click", startExperience, { once: true });
+  </script>
+
+</body>
+</html>
