@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>For My Senorita ❤️</title>
+  <title>For Anshika ❤️</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
@@ -10,7 +10,7 @@
       margin: 0;
       background: black;
       color: white;
-      font-family: 'Arial', sans-serif;
+      font-family: Arial, sans-serif;
       text-align: center;
       overflow: hidden;
     }
@@ -42,7 +42,7 @@
     .text {
       font-size: 1.6rem;
       opacity: 0;
-      animation: fadeIn 3s forwards;
+      animation: fadeIn 2.5s forwards;
     }
 
     @keyframes fadeIn {
@@ -62,6 +62,26 @@
       font-size: 0.9rem;
       opacity: 0.7;
     }
+
+    /* Floating hearts */
+    .heart {
+      position: fixed;
+      bottom: -20px;
+      font-size: 20px;
+      animation: floatUp 6s linear forwards;
+      pointer-events: none;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100vh) scale(1.5);
+        opacity: 0;
+      }
+    }
   </style>
 </head>
 
@@ -77,12 +97,12 @@
     <source src="music.mp3" type="audio/mpeg">
   </audio>
 
-  <!-- TEXT -->
+  <!-- TEXT OVERLAY -->
   <div class="overlay">
     <div id="message" class="text">
-      Still you. ❤️
+      Dear Anshika ❤️
     </div>
-    <div class="hint">Tap anywhere 💕</div>
+    <div class="hint">Tap for you, Anshika 💕</div>
   </div>
 
   <script>
@@ -91,30 +111,45 @@
     const message = document.getElementById("message");
 
     const messages = [
-  "Dear Anshika ❤️",
-  "Ye saal mere liye perfect nahi tha…",
-  "Hum har baar ladte rahe 😔",
-  "Aur sach ye hai ki maine tumhe hurt kiya…",
-  "Uske liye mujhe dil se afsos hai 💔",
-  "Par ek baat kabhi jhooth nahi thi…",
-  "Main tumse bahut pyaar karta hoon 🫶",
-  "Tum meri galtiyon se zyada meri mohabbat ho",
-  "Main perfect nahi hoon…",
-  "Par tumhare liye better banna chahta hoon 🤍",
-  "Is naye saal mein…",
-  "Main fights kam, pyaar zyada chahta hoon ✨",
-  "Main tumhari hasi ka reason banna chahta hoon",
-  "Anshika, tum meri sabse khoobsurat aadat ho 💖",
-  "Happy New Year, meri jaan 🎆",
-  "Iss saal bhi… aur har saal bhi…",
-  "Sirf tum ❤️"
-];
+      "Dear Anshika ❤️",
+      "Ye saal mere liye perfect nahi tha…",
+      "Hum har baar ladte rahe 😔",
+      "Aur sach ye hai ki maine tumhe hurt kiya…",
+      "Uske liye mujhe dil se afsos hai 💔",
+      "Par ek baat kabhi jhooth nahi thi…",
+      "Main tumse bahut pyaar karta hoon 🫶",
+      "Tum meri galtiyon se zyada meri mohabbat ho",
+      "Main perfect nahi hoon…",
+      "Par tumhare liye better banna chahta hoon 🤍",
+      "Is naye saal mein…",
+      "Main fights kam, pyaar zyada chahta hoon ✨",
+      "Main tumhari hasi ka reason banna chahta hoon",
+      "Anshika, tum meri sabse khoobsurat aadat ho 💖",
+      "Happy New Year, meri jaan 🎆",
+      "Iss saal bhi… aur har saal bhi…",
+      "Sirf tum, Anshika ❤️"
+    ];
 
     let index = 0;
+
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      heart.innerHTML = "❤️";
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.animationDuration = (4 + Math.random() * 3) + "s";
+      document.body.appendChild(heart);
+
+      setTimeout(() => {
+        heart.remove();
+      }, 7000);
+    }
 
     function startExperience() {
       video.play();
       music.play();
+
+      setInterval(createHeart, 500);
 
       setInterval(() => {
         message.style.opacity = 0;
@@ -122,9 +157,9 @@
           index = (index + 1) % messages.length;
           message.innerHTML = messages[index];
           message.style.animation = "none";
-          message.offsetHeight; // reset animation
+          message.offsetHeight;
           message.style.animation = "fadeIn 2.5s forwards";
-        }, 800);
+        }, 600);
       }, 4000);
     }
 
