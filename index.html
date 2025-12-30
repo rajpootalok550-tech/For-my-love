@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>For Anshika ❤️</title>
@@ -10,11 +10,13 @@
       margin: 0;
       background: black;
       color: white;
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       text-align: center;
       overflow: hidden;
+      height: 100vh;
     }
 
+    /* Video scaling fix */
     video {
       width: 100%;
       height: 100vh;
@@ -23,7 +25,35 @@
       top: 0;
       left: 0;
       z-index: -1;
-      filter: brightness(70%);
+      filter: brightness(60%);
+      background: black;
+    }
+
+    /* Start Screen */
+    #start-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      cursor: pointer;
+    }
+
+    #start-btn {
+      padding: 15px 30px;
+      font-size: 1.2rem;
+      background: #ff4d6d;
+      color: white;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(255, 77, 109, 0.5);
     }
 
     .overlay {
@@ -32,83 +62,71 @@
       left: 0;
       width: 100%;
       height: 100%;
-      display: flex;
+      display: none; /* Hidden until start */
       align-items: center;
       justify-content: center;
       flex-direction: column;
       padding: 20px;
+      box-sizing: border-box;
     }
 
     .text {
-      font-size: 1.6rem;
-      opacity: 0;
-      animation: fadeIn 2.5s forwards;
+      font-size: 1.8rem;
+      font-weight: bold;
+      text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+      max-width: 80%;
+      line-height: 1.4;
     }
 
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .fadeIn {
+      animation: fadeInAnim 2.5s forwards;
     }
 
-    .hint {
-      position: absolute;
-      bottom: 20px;
-      font-size: 0.9rem;
-      opacity: 0.7;
+    @keyframes fadeInAnim {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Floating hearts */
     .heart {
       position: fixed;
       bottom: -20px;
       font-size: 20px;
       animation: floatUp 6s linear forwards;
       pointer-events: none;
+      z-index: 1;
     }
 
     @keyframes floatUp {
-      0% {
-        transform: translateY(0) scale(1);
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(-100vh) scale(1.5);
-        opacity: 0;
-      }
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
     }
   </style>
 </head>
 
 <body>
 
-  <!-- VIDEO -->
-  <video id="bgVideo" loop playsinline>
+  <div id="start-screen" onclick="startExperience()">
+    <button id="start-btn">Tap for you, Anshika 💕</button>
+  </div>
+
+  <video id="bgVideo" loop playsinline muted preload="auto">
     <source src="love.mp4" type="video/mp4">
   </video>
 
-  <!-- MUSIC -->
-  <audio id="bgMusic" loop>
+  <audio id="bgMusic" loop preload="auto">
     <source src="music.mp3" type="audio/mpeg">
   </audio>
 
-  <!-- TEXT OVERLAY -->
-  <div class="overlay">
-    <div id="message" class="text">
-      Dear Anshika ❤️
-    </div>
-    <div class="hint">Tap for you, Anshika 💕</div>
+  <div class="overlay" id="main-content">
+    <div id="message" class="text"></div>
   </div>
 
   <script>
     const video = document.getElementById("bgVideo");
     const music = document.getElementById("bgMusic");
     const message = document.getElementById("message");
+    const startScreen = document.getElementById("start-screen");
+    const mainContent = document.getElementById("main-content");
 
     const messages = [
       "Dear Anshika ❤️",
@@ -139,32 +157,49 @@
       heart.style.left = Math.random() * 100 + "vw";
       heart.style.animationDuration = (4 + Math.random() * 3) + "s";
       document.body.appendChild(heart);
-
-      setTimeout(() => {
-        heart.remove();
-      }, 7000);
+      setTimeout(() => heart.remove(), 7000);
     }
 
     function startExperience() {
-      video.play();
-      music.play();
+      // Hide start screen and show content
+      startScreen.style.display = "none";
+      mainContent.style.display = "flex";
 
+      // Unmute and play media
+      video.muted = false;
+      
+      // Start both media files
+      const playPromiseVideo = video.play();
+      const playPromiseMusic = music.play();
+
+      // Fallback for browser blocks
+      if (playPromiseVideo !== undefined) {
+        playPromiseVideo.catch(error => console.log("Video wait: ", error));
+      }
+
+      // Initial heart burst
+      for(let i=0; i<10; i++) setTimeout(createHeart, i*100);
+      
+      // Start continuous hearts
       setInterval(createHeart, 500);
 
-      setInterval(() => {
-        message.style.opacity = 0;
-        setTimeout(() => {
-          index = (index + 1) % messages.length;
-          message.innerHTML = messages[index];
-          message.style.animation = "none";
-          message.offsetHeight;
-          message.style.animation = "fadeIn 2.5s forwards";
-        }, 600);
-      }, 4000);
+      // Start text sequence
+      updateText();
+      setInterval(updateText, 4500);
     }
 
-    document.body.addEventListener("click", startExperience, { once: true });
+    function updateText() {
+      message.style.opacity = 0;
+      setTimeout(() => {
+        message.innerHTML = messages[index];
+        message.classList.remove("fadeIn");
+        void message.offsetWidth; // Trigger reflow
+        message.classList.add("fadeIn");
+        index = (index + 1) % messages.length;
+      }, 600);
+    }
   </script>
 
 </body>
 </html>
+
